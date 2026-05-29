@@ -1,0 +1,10 @@
+prune:
+  automatic: true
+  number: 1
+pythonRequirements:
+  zip: true
+secretsManager: #url secretmanager
+  securityGroupIds:
+    - Ref: SecurityGroup
+  subnetIds:
+    - #subnets
