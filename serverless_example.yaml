@@ -1,0 +1,98 @@
+service: automacao-slack-lambda
+
+frameworkVersion: '3'
+
+plugins:
+  
+
+
+package:
+  individually: true
+  exclude:
+    - ./**
+
+custom:
+  envParams: 
+  pythonRequirements:
+    # Garante que o plugin não tente criar uma Layer global
+    layer: false
+
+provider:
+  name: aws
+  runtime: python3.11
+  region: 
+  stage:
+  deploymentBucket:
+    name: 
+  stackTags:
+    ManagedBy: ServerlessFramework
+  logRetentionInDays: 30 # Retenção de logs global
+
+functions:
+  SlkRouterLambda:
+    name: 
+    handler: main.lambda_handler
+    description: "Recebe requisições via API Gateway e envia para a fila SQS FIFO."
+    module: src/SlkRouterImportContLambda
+    package:
+      include:
+        - src/SlkRouterLambda/**
+    timeout: 3
+    memorySize: 128
+    environment:
+      QUEUE_URL: !
+      SLACK_SIGNING_SECRET: 
+    events:
+      - http:
+          path: processar
+          method: post
+    iamRoleStatements:
+      - Effect: 
+        Action:
+          
+        Resource:
+          - Fn::GetAtt: 
+      - Effect:
+        Action:
+          
+
+        Resource:
+          - Fn::GetAtt: 
+
+  SlkRelatoriosLambda:
+    name:
+    handler: 
+    description: "Consome a fila SQS sequencialmente (1 por vez) e conecta ao banco."
+    module: src/SlkRelatoriosLambda
+    package:
+      include:
+        - src/SlkImportContratosLambda/**
+    timeout: 300
+    memorySize: 1024
+    vpc: 
+    environment:
+      DB_HOST: 
+      DB_USER: 
+      DB_NAME: 
+      DB_PASSWORD: 
+      GOOGLE_SECRET_ARN: 
+      SLACK_SIGNING_SECRET: 
+    events:
+      - sqs:
+          arn:
+            Fn::GetAtt: 
+          batchSize: 1
+    iamRoleStatements:
+      - Effect: 
+        Action:
+          
+        Resource:
+          - Fn::GetAtt: 
+      - Effect: 
+        Action:
+
+        Resource:
+          - Fn::GetAtt: 
+
+resources:
+    
